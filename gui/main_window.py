@@ -191,6 +191,18 @@ class MainWindow(tk.Tk):
         )
         self._crossfade_slider.pack(fill=tk.X, pady=3)
 
+        # Output format: FLAC (lossless compressed, default) or WAV
+        fmt_frame = ttk.Frame(frame)
+        fmt_frame.pack(fill=tk.X, pady=3)
+        ttk.Label(fmt_frame, text=t("label.output_format") + ":", width=14,
+                  anchor="e").pack(side=tk.LEFT, padx=(0, 2))
+        self._format_var = tk.StringVar(value="flac")
+        fmt_combo = ttk.Combobox(fmt_frame, textvariable=self._format_var,
+                                 values=["flac", "wav"], state="readonly", width=6)
+        fmt_combo.pack(side=tk.LEFT, padx=2)
+        ttk.Label(fmt_frame, text=t("tooltip.output_format"),
+                  foreground="gray", font=("", 8)).pack(side=tk.LEFT, padx=5)
+
     # ──────────────────────────────────────────────
     # Action Buttons
     # ──────────────────────────────────────────────
@@ -306,7 +318,8 @@ class MainWindow(tk.Tk):
 
         # ── Build output path ──
         base, ext = os.path.splitext(self._input_path)
-        output_path = f"{base}_cleaned.wav"
+        out_fmt = self._format_var.get()
+        output_path = f"{base}_cleaned.{out_fmt}"
 
         # ── Overwrite check ──
         if os.path.exists(output_path):
@@ -322,6 +335,7 @@ class MainWindow(tk.Tk):
             "threshold_db": float(self._threshold_slider.get()),
             "min_silence_sec": float(self._min_silence_slider.get()),
             "crossfade_ms": float(self._crossfade_slider.get()),
+            "output_format": self._format_var.get(),
         }
 
         # ── Disable UI for the duration of processing ──
@@ -363,6 +377,7 @@ class MainWindow(tk.Tk):
                 params["min_silence_sec"],
                 params["crossfade_ms"],
                 progress_callback=progress_cb,
+                output_format=params["output_format"],
             )
             self._progress_queue.put(("done", result))
 

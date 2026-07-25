@@ -69,19 +69,20 @@ def _crossfade(segments, crossfade_frames):
 
 
 def process(input_path, output_path, threshold_db, min_silence_sec,
-            crossfade_ms, progress_callback=None):
+            crossfade_ms, progress_callback=None, output_format="flac"):
     """Run the full processing pipeline.
 
     Args:
         input_path: path to input audio file
-        output_path: path for output WAV file
+        output_path: path for output file
         threshold_db: silence threshold in dB
         min_silence_sec: minimum silence duration to remove (seconds)
         crossfade_ms: crossfade duration at splice points (milliseconds)
         progress_callback: callable(stage, progress, extra_info)
             stage: str — "load", "analyze", "process", "export", "log"
             progress: float — 0.0 to 1.0
-            extra_info: dict with optional keys: scanned, total, found_segments, total_removed
+            extra_info: dict with optional keys
+        output_format: "flac" (lossless compressed, default) or "wav" (uncompressed)
 
     Returns:
         dict with keys: input_info, removed_segments, summary, log_path
@@ -163,7 +164,7 @@ def process(input_path, output_path, threshold_db, min_silence_sec,
     if progress_callback:
         progress_callback("export", 0.0, {})
 
-    audio_io.save_audio(output_samples, output_path, info)
+    audio_io.save_audio(output_samples, output_path, info, output_format=output_format)
 
     if progress_callback:
         progress_callback("export", 1.0, {})

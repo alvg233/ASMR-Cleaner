@@ -136,13 +136,14 @@ def load_audio(filepath):
     return samples, info
 
 
-def save_audio(samples, filepath, info):
-    """Save float32 numpy array to WAV file.
+def save_audio(samples, filepath, info, output_format="flac"):
+    """Save float32 numpy array to audio file.
 
     Args:
         samples: float32 ndarray, shape (total_frames, channels), range [-1.0, 1.0]
-        filepath: Output path (should end in .wav)
+        filepath: Output path
         info: dict from get_audio_info() with sample_rate and channels
+        output_format: "flac" (lossless compressed, default) or "wav" (uncompressed)
     """
     # Clamp to [-1.0, 1.0] to prevent wrap-around on conversion
     samples = np.clip(samples, -1.0, 1.0)
@@ -163,4 +164,4 @@ def save_audio(samples, filepath, info):
         channels=info["channels"],
     )
 
-    seg.export(filepath, format="wav")
+    seg.export(filepath, format=output_format)
