@@ -456,10 +456,10 @@ class MainWindow(tk.Tk):
                 t("status.complete").format(result.get("log_path", ""))
             )
 
-            detail = (
-                f"切除 {summary['total_segments_removed']} 段，"
-                f"共 {self._format_short_duration(summary['total_removed_sec'])}，"
-                f"耗时 {result.get('elapsed_sec', 0):.1f}s"
+            detail = t("status.complete_detail").format(
+                segments=summary['total_segments_removed'],
+                duration=self._format_short_duration(summary['total_removed_sec']),
+                elapsed=result.get('elapsed_sec', 0),
             )
             self._progress_detail.configure(text=detail)
 

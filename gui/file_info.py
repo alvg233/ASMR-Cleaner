@@ -80,7 +80,7 @@ class FileInfoPanel(ttk.LabelFrame):
     def show_error(self, message):
         """Display an error message instead of file info."""
         for key, lbl in self._value_labels.items():
-            lbl.configure(text="错误" if key == "info.format" else "—")
+            lbl.configure(text=t("error.title") if key == "info.format" else "—")
 
     def clear(self):
         """Clear all info fields to default."""

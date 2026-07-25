@@ -58,6 +58,7 @@ STRINGS = {
         "status.exporting": "正在导出文件...",
         "status.writing_log": "正在写入日志...",
         "status.complete": "✅ 处理完成！已保存到：{}",
+        "status.complete_detail": "切除 {segments} 段，共 {duration}，耗时 {elapsed:.1f}s",
         "status.complete_no_silence": "✅ 扫描完成，未发现长静音区，无需处理",
         "status.cancelled": "已取消",
 
@@ -86,6 +87,7 @@ STRINGS = {
         "log.multiple_logs": "找到 {} 份日志，请选择：",
         "btn.open_folder": "📂 打开文件位置",
         "btn.copy_text": "📋 复制为文本",
+        "btn.open": "打开",
         "btn.close": "关闭",
 
         # Duration formatting
@@ -171,6 +173,7 @@ STRINGS = {
         "status.exporting": "Exporting file...",
         "status.writing_log": "Writing log...",
         "status.complete": "✅ Done! Saved to: {}",
+        "status.complete_detail": "Removed {segments} segments, {duration} total, took {elapsed:.1f}s",
         "status.complete_no_silence": "✅ Scan complete — no long silence detected, no changes needed",
         "status.cancelled": "Cancelled",
 
@@ -197,6 +200,7 @@ STRINGS = {
         "log.multiple_logs": "Found {} log files, please select:",
         "btn.open_folder": "📂 Open File Location",
         "btn.copy_text": "📋 Copy as Text",
+        "btn.open": "Open",
         "btn.close": "Close",
 
         "time.hour": "h",

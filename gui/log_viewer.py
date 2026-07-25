@@ -74,7 +74,7 @@ class _LogSelectionDialog(tk.Toplevel):
         btn_frame.pack(pady=10)
         ttk.Button(btn_frame, text=t("btn.close"), command=self.destroy).pack(
             side=tk.RIGHT, padx=5)
-        ttk.Button(btn_frame, text="打开", command=self._on_select).pack(
+        ttk.Button(btn_frame, text=t("btn.open"), command=self._on_select).pack(
             side=tk.RIGHT, padx=5)
 
         self.transient(parent)
