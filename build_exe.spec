@@ -9,15 +9,9 @@ Output: dist/ASMR-Cleaner.exe (single file)
 import sys
 from pathlib import Path
 
-# --- ffmpeg / ffprobe binary paths ---
-# Put ffmpeg.exe and ffprobe.exe in the project root.
-_FFMPEG = Path("ffmpeg.exe")
-_FFPROBE = Path("ffprobe.exe")
+# ffmpeg/ffprobe are NOT bundled — ship them as separate files next to the .exe.
+# This keeps the exe small (~120MB) and startup fast (no 200MB decompression).
 _binaries = []
-if _FFMPEG.exists():
-    _binaries.append((str(_FFMPEG), '.'))
-if _FFPROBE.exists():
-    _binaries.append((str(_FFPROBE), '.'))
 
 block_cipher = None
 

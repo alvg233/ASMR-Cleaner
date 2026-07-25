@@ -9,19 +9,23 @@ import os
 
 # --- ffmpeg / ffprobe discovery ---
 # Must happen BEFORE any pydub import, because pydub scans PATH at import time.
+# When frozen (PyInstaller), ffmpeg/ffprobe live next to the .exe, NOT inside the bundle.
 if getattr(sys, "frozen", False):
-    _base_path = sys._MEIPASS
+    _exe_dir = os.path.dirname(sys.executable)
+    # Also check _MEIPASS for the case where they ARE bundled (legacy)
+    _search_dirs = [_exe_dir, sys._MEIPASS]
 else:
-    _base_path = os.path.dirname(os.path.abspath(__file__))
+    _exe_dir = os.path.dirname(os.path.abspath(__file__))
+    _search_dirs = [_exe_dir]
 
-# Add project dir to PATH so pydub's `which("ffmpeg")` finds it silently
-_ffmpeg_dir = _base_path
-if os.path.exists(os.path.join(_base_path, "ffmpeg.exe")):
-    os.environ["PATH"] = _ffmpeg_dir + os.pathsep + os.environ.get("PATH", "")
-    # Also set explicitly for any edge case where pydub ignores PATH
-    import pydub.utils
-    pydub.utils.FFMPEG_PATH = os.path.join(_base_path, "ffmpeg.exe")
-    pydub.utils.FFPROBE_PATH = os.path.join(_base_path, "ffprobe.exe")
+for _d in _search_dirs:
+    _ff = os.path.join(_d, "ffmpeg.exe")
+    if os.path.exists(_ff):
+        os.environ["PATH"] = _d + os.pathsep + os.environ.get("PATH", "")
+        import pydub.utils
+        pydub.utils.FFMPEG_PATH = _ff
+        pydub.utils.FFPROBE_PATH = os.path.join(_d, "ffprobe.exe")
+        break
 
 
 def _setup_dpi():
