@@ -7,18 +7,21 @@ and launches the main GUI window.
 import sys
 import os
 
-# Fix for PyInstaller: locate ffmpeg
+# --- ffmpeg / ffprobe discovery ---
+# Must happen BEFORE any pydub import, because pydub scans PATH at import time.
 if getattr(sys, "frozen", False):
-    # Running as bundled exe
-    base_path = sys._MEIPASS
+    _base_path = sys._MEIPASS
 else:
-    base_path = os.path.dirname(os.path.abspath(__file__))
+    _base_path = os.path.dirname(os.path.abspath(__file__))
 
-# Configure pydub to find ffmpeg
-ffmpeg_path = os.path.join(base_path, "ffmpeg.exe")
-if os.path.exists(ffmpeg_path):
-    from pydub import AudioSegment
-    AudioSegment.converter = ffmpeg_path
+# Add project dir to PATH so pydub's `which("ffmpeg")` finds it silently
+_ffmpeg_dir = _base_path
+if os.path.exists(os.path.join(_base_path, "ffmpeg.exe")):
+    os.environ["PATH"] = _ffmpeg_dir + os.pathsep + os.environ.get("PATH", "")
+    # Also set explicitly for any edge case where pydub ignores PATH
+    import pydub.utils
+    pydub.utils.FFMPEG_PATH = os.path.join(_base_path, "ffmpeg.exe")
+    pydub.utils.FFPROBE_PATH = os.path.join(_base_path, "ffprobe.exe")
 
 
 def _setup_dpi():

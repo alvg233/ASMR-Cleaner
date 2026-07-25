@@ -9,18 +9,22 @@ Output: dist/ASMR-Cleaner.exe (single file)
 import sys
 from pathlib import Path
 
-# --- ffmpeg binary path ---
-# Put ffmpeg.exe in the project root, or set FFMPEG_PATH env var.
-FFMPEG = Path("ffmpeg.exe")
-if not FFMPEG.exists():
-    FFMPEG = Path(os.environ.get("FFMPEG_PATH", "ffmpeg.exe"))
+# --- ffmpeg / ffprobe binary paths ---
+# Put ffmpeg.exe and ffprobe.exe in the project root.
+_FFMPEG = Path("ffmpeg.exe")
+_FFPROBE = Path("ffprobe.exe")
+_binaries = []
+if _FFMPEG.exists():
+    _binaries.append((str(_FFMPEG), '.'))
+if _FFPROBE.exists():
+    _binaries.append((str(_FFPROBE), '.'))
 
 block_cipher = None
 
 a = Analysis(
     ['main.py'],
     pathex=[],
-    binaries=[(str(FFMPEG), '.')] if FFMPEG.exists() else [],
+    binaries=_binaries,
     datas=[],
     hiddenimports=['pydub', 'numpy', 'tkinter'],
     hookspath=[],
