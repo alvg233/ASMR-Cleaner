@@ -133,7 +133,7 @@ class StageIndicator(ttk.Frame):
             if i < stage_index:
                 lbl.configure(text=f"✅ {base}", foreground="green")
             elif i == stage_index:
-                lbl.configure(text=f"🔄 {base}", foreground="blue")
+                lbl.configure(text=f"> {base}", foreground="blue")
             else:
                 lbl.configure(text=f"⬜ {base}", foreground="gray")
 

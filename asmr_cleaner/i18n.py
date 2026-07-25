@@ -42,7 +42,7 @@ STRINGS = {
         # Buttons
         "btn.start": "▶ 开始处理",
         "btn.start.processing": "处理中...",
-        "btn.view_log": "📋 查看日志",
+        "btn.view_log": "查看日志",
 
         # Stage indicator
         "stage.load": "加载",
@@ -87,8 +87,8 @@ STRINGS = {
         "log.no_logs": "未找到该文件的处理日志",
         "log.select_log": "选择日志",
         "log.multiple_logs": "找到 {} 份日志，请选择：",
-        "btn.open_folder": "📂 打开文件位置",
-        "btn.copy_text": "📋 复制为文本",
+        "btn.open_folder": "打开文件位置",
+        "btn.copy_text": "复制为文本",
         "btn.open": "打开",
         "btn.close": "关闭",
 
@@ -223,7 +223,7 @@ ffmpeg：ffmpeg-8.1.2-essentials (gyan.dev)
 
         "btn.start": "▶ Start",
         "btn.start.processing": "Processing...",
-        "btn.view_log": "📋 View Log",
+        "btn.view_log": "View Log",
 
         "stage.load": "Load",
         "stage.analyze": "Analyze",
@@ -264,8 +264,8 @@ ffmpeg：ffmpeg-8.1.2-essentials (gyan.dev)
         "log.no_logs": "No processing logs found for this file",
         "log.select_log": "Select Log",
         "log.multiple_logs": "Found {} log files, please select:",
-        "btn.open_folder": "📂 Open File Location",
-        "btn.copy_text": "📋 Copy as Text",
+        "btn.open_folder": "Open File Location",
+        "btn.copy_text": "Copy as Text",
         "btn.open": "Open",
         "btn.close": "Close",
 
