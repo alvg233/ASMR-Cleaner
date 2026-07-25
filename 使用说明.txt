@@ -1,0 +1,23 @@
+========================================
+  ASMR Cleaner  v1.0
+========================================
+
+【怎么用 How to Use】
+
+  双击 ASMR-Cleaner.exe  →  启动软件
+  Double-click ASMR-Cleaner.exe to launch
+
+  三个文件缺一不可 / All 3 files are required:
+    ASMR-Cleaner.exe  主程序
+    ffmpeg.exe        音频解码
+    ffprobe.exe       文件信息
+
+========================================
+
+  处理完的音频和日志保存在原文件旁边。
+  Output files and logs are saved next to the original file.
+
+  菜单 帮助→使用说明 了解更多。
+  Menu Help→Usage Guide for more info.
+
+========================================

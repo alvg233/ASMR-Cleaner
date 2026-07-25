@@ -30,3 +30,5 @@ Thumbs.db
 
 # Settings (user-specific, created at runtime)
 # Not ignoring settings.py — that's source code
+dist2/
+build/
