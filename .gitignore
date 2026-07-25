@@ -8,9 +8,10 @@ __pycache__/
 # PyInstaller
 build/
 dist/
+dist2/
 *.spec.bak
 
-# Binary dependencies (too large for git)
+# Binary dependencies
 ffmpeg.exe
 ffprobe.exe
 
@@ -21,14 +22,11 @@ test_*
 
 # IDE
 .idea/
-*.swp
-*.swo
+
+# Claude / Superpowers (local dev tools)
+.claude/
+.superpowers/
 
 # OS
 Thumbs.db
 .DS_Store
-
-# Settings (user-specific, created at runtime)
-# Not ignoring settings.py — that's source code
-dist2/
-build/
