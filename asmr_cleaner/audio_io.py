@@ -44,7 +44,8 @@ def get_audio_info(filepath):
         filepath,
     ]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(cmd, capture_output=True, text=True,
+                                encoding='utf-8', errors='replace', timeout=30)
         result.check_returncode()
         data = json.loads(result.stdout)
     except (subprocess.TimeoutExpired, subprocess.CalledProcessError, json.JSONDecodeError) as e:
