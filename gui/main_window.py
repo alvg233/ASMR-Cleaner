@@ -9,7 +9,7 @@ from tkinter import ttk, filedialog, messagebox
 
 from asmr_cleaner.i18n import t, set_language, get_language
 from asmr_cleaner import settings
-from asmr_cleaner.audio_io import get_audio_info, SUPPORTED_FORMATS
+from asmr_cleaner.audio_io import SUPPORTED_FORMATS
 from asmr_cleaner.core import process
 
 from gui.widgets import LabeledSlider, StageIndicator

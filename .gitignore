@@ -1,4 +1,32 @@
+# Python
 __pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+
+# PyInstaller
+build/
+dist/
+*.spec.bak
+
+# Binary dependencies (too large for git)
 ffmpeg.exe
 ffprobe.exe
+
+# Test artifacts
 _t_*
+_s_*
+test_*
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Settings (user-specific, created at runtime)
+# Not ignoring settings.py — that's source code

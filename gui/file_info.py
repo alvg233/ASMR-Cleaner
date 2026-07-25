@@ -1,7 +1,5 @@
 """File info panel — displays audio file metadata."""
 
-import os
-import tkinter as tk
 from tkinter import ttk
 
 from asmr_cleaner.i18n import t

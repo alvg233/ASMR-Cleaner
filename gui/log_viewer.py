@@ -1,6 +1,7 @@
 """Log viewer dialog — displays formatted processing logs."""
 
 import os
+import datetime
 import tkinter as tk
 from tkinter import ttk
 
@@ -64,7 +65,6 @@ class _LogSelectionDialog(tk.Toplevel):
         for path in log_paths:
             fname = os.path.basename(path)
             mtime = os.path.getmtime(path)
-            import datetime
             dt = datetime.datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
             self.listbox.insert(tk.END, f"{dt}  —  {fname}")
 
@@ -108,7 +108,6 @@ class _LogDialog(tk.Toplevel):
         summary = data.get("summary", {})
         params = data.get("parameters", {})
         removed = data.get("removed_segments", [])
-        input_info = data.get("input_info", {})
 
         # Top info frame
         info_frame = ttk.Frame(self, padding=10)
@@ -224,8 +223,7 @@ class _LogDialog(tk.Toplevel):
 
         self.clipboard_clear()
         self.clipboard_append("\n".join(lines))
-        # Show brief confirmation
-        self.after(100, lambda: None)  # Let clipboard settle
+        self.clipboard_get()  # force clipboard to settle
 
 
 def _format_duration(seconds):
