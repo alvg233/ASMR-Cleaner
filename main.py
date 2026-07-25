@@ -27,6 +27,17 @@ for _d in _search_dirs:
         pydub.utils.FFPROBE_PATH = os.path.join(_d, "ffprobe.exe")
         break
 
+# Suppress ffmpeg/ffprobe console popup on Windows
+if sys.platform == "win32":
+    import subprocess as _sp
+    _orig = _sp.Popen
+    class _NoConsolePopen(_orig):
+        def __init__(self, *a, **kw):
+            kw.setdefault('creationflags', 0)
+            kw['creationflags'] |= 0x08000000  # CREATE_NO_WINDOW
+            super().__init__(*a, **kw)
+    _sp.Popen = _NoConsolePopen
+
 
 def _setup_dpi():
     """Enable high-DPI awareness on Windows."""
