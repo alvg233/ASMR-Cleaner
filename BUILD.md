@@ -36,19 +36,33 @@ pyinstaller build_exe.spec
 
 首次启动会在 `%APPDATA%/ASMR-Cleaner/` 下自动创建设置文件。
 
-## 4. 文件大小
+## 4. 文件大小与分发
 
-打包后约 **313 MB**（Python runtime ~30MB + ffmpeg ~100MB + ffprobe ~100MB + numpy ~30MB + 项目代码 ~1MB + 其他依赖 ~50MB）。
+构建后 `dist/` 目录包含：
+
+| 文件 | 大小 | 说明 |
+|---|---|---|
+| `ASMR-Cleaner.exe` | ~243MB | 自包含（Python + numpy + tkinter） |
+| `ffmpeg.exe` | ~98MB | 音频编解码（需随 exe 一起分发） |
+| `ffprobe.exe` | ~97MB | 元信息读取（需随 exe 一起分发） |
+
+**发给别人**：把这 3 个文件打包成 zip，对方解压后双击 exe 即可。
+
+### 为什么 exe 还是大
+
+当前环境是 Anaconda Python，numpy 依赖 Intel MKL（~150MB）。用标准 Python（pip 装 numpy）构建，exe 可降到 ~60MB。
+
+### 为什么 ffmpeg 不打包进 exe
+
+PyInstaller `--onefile` 每次启动要解压整个包到临时目录。ffmpeg+ffprobe 共 200MB，打进去导致启动慢 3-5 秒。放在外部文件按需加载，秒开。
 
 ### 精简方案
 
-| 方案 | 删除 | 体积 | 支持格式 |
+| 方案 | 删除 | 总体积 | 支持格式 |
 |---|---|---|---|
-| 完整版 | — | ~313MB | WAV/FLAC/MP3/AAC/OGG/M4A/WMA |
-| 轻量版 | ffprobe.exe | ~220MB | WAV/FLAC/MP3/AAC/OGG/M4A |
-| 极简版 | ffmpeg.exe + ffprobe.exe | ~120MB | 仅 WAV |
-
-轻量版去掉 ffprobe 后，文件信息面板会降级为 pydub 读取（对大文件较慢），但处理功能不受影响。
+| 完整版 | — | ~438MB | WAV/FLAC/MP3/AAC/OGG/M4A/WMA |
+| 轻量版 | ffprobe.exe | ~340MB | 同上（元信息降级为 pydub 读取） |
+| 极简版 | ffmpeg.exe + ffprobe.exe | ~243MB | 仅 WAV |
 
 ---
 
