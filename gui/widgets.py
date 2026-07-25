@@ -14,6 +14,7 @@ class LabeledSlider(ttk.Frame):
                  from_, to, default, step, command=None, **kwargs):
         super().__init__(parent, **kwargs)
         self.command = command
+        self._step = step
         self._value = tk.DoubleVar(value=float(default))
 
         # Lazy import to avoid circular dependency with i18n
@@ -61,7 +62,9 @@ class LabeledSlider(ttk.Frame):
 
     def _on_scale_change(self, event=None):
         """Called when slider moves — syncs spinbox and fires command."""
-        val = round(self._value.get())
+        val = self._value.get()
+        if self._step:
+            val = round(val / self._step) * self._step
         self._value.set(val)
         if self.command:
             self.command(val)
@@ -103,15 +106,15 @@ class StageIndicator(ttk.Frame):
         super().__init__(parent, **kwargs)
         from asmr_cleaner.i18n import t
 
+        self._base_labels = [t(key) for key in self.STAGE_KEYS]
         self._labels = []
-        self._status = [None] * len(self.STAGE_KEYS)  # None=pending, True=done, False=current
 
         # Create labels with arrows between them
         inner = ttk.Frame(self)
         inner.pack(expand=True)
 
-        for i, key in enumerate(self.STAGE_KEYS):
-            lbl = ttk.Label(inner, text=t(key), padding=(4, 2))
+        for i, base_text in enumerate(self._base_labels):
+            lbl = ttk.Label(inner, text=f"⬜ {base_text}", padding=(4, 2))
             lbl.pack(side=tk.LEFT)
             self._labels.append(lbl)
 
@@ -126,27 +129,20 @@ class StageIndicator(ttk.Frame):
             stage_index: 0-based index (0=load, 1=analyze, 2=process, 3=export, 4=log)
         """
         for i, lbl in enumerate(self._labels):
+            base = self._base_labels[i]
             if i < stage_index:
-                # Done
-                lbl.configure(text=f"✅ {lbl.cget('text').lstrip('✅ 🔄 ')}",
-                             foreground="green")
+                lbl.configure(text=f"✅ {base}", foreground="green")
             elif i == stage_index:
-                # Current — highlight
-                lbl.configure(text=f"🔄 {lbl.cget('text').lstrip('✅ 🔄 ')}",
-                             foreground="blue")
+                lbl.configure(text=f"🔄 {base}", foreground="blue")
             else:
-                # Pending — gray out
-                lbl.configure(text=f"⬜ {lbl.cget('text').lstrip('✅ 🔄 ⬜ ')}",
-                             foreground="gray")
+                lbl.configure(text=f"⬜ {base}", foreground="gray")
 
     def set_all_done(self):
         """Mark all stages as complete."""
-        for lbl in self._labels:
-            lbl.configure(text=f"✅ {lbl.cget('text').lstrip('✅ 🔄 ⬜ ')}",
-                         foreground="green")
+        for i, lbl in enumerate(self._labels):
+            lbl.configure(text=f"✅ {self._base_labels[i]}", foreground="green")
 
     def reset(self):
         """Reset all stages to pending."""
-        for lbl in self._labels:
-            lbl.configure(text=f"⬜ {lbl.cget('text').lstrip('✅ 🔄 ⬜ ')}",
-                         foreground="gray")
+        for i, lbl in enumerate(self._labels):
+            lbl.configure(text=f"⬜ {self._base_labels[i]}", foreground="gray")
