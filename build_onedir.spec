@@ -19,6 +19,7 @@ a = Analysis(
     excludes=[
         'matplotlib', 'pandas', 'PIL', 'cv2', 'tensorflow', 'torch',
         'librosa', 'soundfile', 'scipy',
+        'mkl', 'mkl-service',  # Anaconda MKL — excluded if using pip numpy
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
