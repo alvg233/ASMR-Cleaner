@@ -19,7 +19,9 @@ def _frames_rms_db(mono_samples):
         num_frames: total number of frames
     """
     total = len(mono_samples)
-    num_frames = max(1, total // FRAME_SIZE)
+    num_frames = total // FRAME_SIZE
+    if num_frames < 1:
+        return np.array([], dtype=np.float32), 0
     # Trim to exact multiple
     trimmed = mono_samples[:num_frames * FRAME_SIZE]
 
@@ -37,18 +39,33 @@ def detect_silence(samples, sample_rate, threshold_db, min_duration_sec,
     """Find all silence segments in audio.
 
     Uses a hysteresis state machine to prevent threshold-edge flickering.
+    The analysis is frame-based: audio is divided into frames of FRAME_SIZE
+    (1024) samples. Each frame's RMS level (in dB) is compared against
+    threshold_db to classify it as silent or active. This means silence
+    boundaries are quantized to frame boundaries (~21 ms resolution at
+    48 kHz).
+
+    Multi-channel audio is averaged to mono for detection by taking the
+    mean across channels. The mono signal is then split into frames for
+    analysis. The hysteresis window prevents rapid toggling at the edge
+    of a silent region: the state machine only transitions from silence
+    back to active after hysteresis_frames consecutive non-silent frames.
 
     Args:
-        samples: float32 ndarray, shape (N, C), normalized to [-1.0, 1.0]
+        samples: float32 ndarray, shape (N,) mono or (N, C) multi-channel,
+                 normalized to [-1.0, 1.0]
         sample_rate: samples per second (e.g. 48000)
         threshold_db: dB threshold — below this is considered silence
         min_duration_sec: minimum silence duration to report (seconds)
         hysteresis_ms: hysteresis window in milliseconds (default 200)
         progress_callback: callable(progress_0_to_1) called periodically
+                           every ~100 frames (~2 s at 48 kHz)
 
     Returns:
         List of dicts, each with keys:
             start_sec, end_sec, duration_sec, start_sample, end_sample
+            Returns an empty list for audio shorter than FRAME_SIZE samples
+            or containing no silence intervals meeting min_duration_sec.
     """
     # Convert to mono for detection (average channels)
     if samples.ndim > 1 and samples.shape[1] > 1:
@@ -98,7 +115,7 @@ def detect_silence(samples, sample_rate, threshold_db, min_duration_sec,
                 above_counter += 1
                 if above_counter >= hysteresis_frames:
                     # Transition back to active — record the silence
-                    end_frame = i - hysteresis_frames
+                    end_frame = i - hysteresis_frames + 1
                     silence_intervals.append({
                         "start_frame": silence_start_frame,
                         "end_frame": end_frame,
@@ -109,7 +126,7 @@ def detect_silence(samples, sample_rate, threshold_db, min_duration_sec,
                 above_counter = 0
 
         # Progress callback
-        if progress_callback and i % 1000 == 0:
+        if progress_callback and i % 100 == 0:
             progress_callback(i / num_frames)
 
     # Handle trailing silence (file ends while still in silence)
