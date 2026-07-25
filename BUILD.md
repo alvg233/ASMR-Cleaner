@@ -38,11 +38,17 @@ pyinstaller build_exe.spec
 
 ## 4. 文件大小
 
-打包后约 **60-80 MB**（Python runtime ~30MB + ffmpeg ~30MB + 项目代码 ~1MB）。
+打包后约 **313 MB**（Python runtime ~30MB + ffmpeg ~100MB + ffprobe ~100MB + numpy ~30MB + 项目代码 ~1MB + 其他依赖 ~50MB）。
 
-如果嫌大，可以考虑：
-- 去掉 ffmpeg（只支持 WAV，体积减半 ~30MB）
-- 使用 UPX 压缩（spec 中 `upx=True` 已启用）
+### 精简方案
+
+| 方案 | 删除 | 体积 | 支持格式 |
+|---|---|---|---|
+| 完整版 | — | ~313MB | WAV/FLAC/MP3/AAC/OGG/M4A/WMA |
+| 轻量版 | ffprobe.exe | ~220MB | WAV/FLAC/MP3/AAC/OGG/M4A |
+| 极简版 | ffmpeg.exe + ffprobe.exe | ~120MB | 仅 WAV |
+
+轻量版去掉 ffprobe 后，文件信息面板会降级为 pydub 读取（对大文件较慢），但处理功能不受影响。
 
 ---
 
