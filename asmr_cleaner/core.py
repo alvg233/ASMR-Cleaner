@@ -24,6 +24,7 @@ def _crossfade(segments, crossfade_frames):
         Concatenated ndarray of shape (total_frames, C), float32
     """
     if len(segments) == 0:
+        # Caller (process) must handle empty arrays with the correct channel count
         return np.array([], dtype=np.float32).reshape(0, 1)
 
     if len(segments) == 1:
@@ -48,7 +49,6 @@ def _crossfade(segments, crossfade_frames):
         w_in = np.linspace(0.0, 1.0, cf, dtype=np.float32)
 
         # Reshape for broadcasting over channels
-        channels = prev.shape[1]
         w_out = w_out.reshape(-1, 1)
         w_in = w_in.reshape(-1, 1)
 
@@ -123,7 +123,7 @@ def process(input_path, output_path, threshold_db, min_silence_sec,
     if progress_callback:
         progress_callback("process", 0.0, {})
 
-    crossfade_frames = int(crossfade_ms / 1000.0 * info["sample_rate"])
+    crossfade_frames = round(crossfade_ms / 1000.0 * info["sample_rate"])
 
     if len(removed) == 0:
         # No silence to remove — output = input
@@ -148,7 +148,11 @@ def process(input_path, output_path, threshold_db, min_silence_sec,
             retained.append(samples[pos:])
 
         # Apply crossfade between retained segments
-        output_samples = _crossfade(retained, crossfade_frames)
+        if len(retained) == 0:
+            # All content was silence — create empty array with correct channel count
+            output_samples = np.zeros((0, info["channels"]), dtype=np.float32)
+        else:
+            output_samples = _crossfade(retained, crossfade_frames)
 
     if progress_callback:
         progress_callback("process", 1.0, {})
