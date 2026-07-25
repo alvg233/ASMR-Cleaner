@@ -328,9 +328,13 @@ class MainWindow(tk.Tk):
         self._processing = True
         self._start_btn.configure(text=t("btn.start.processing"), state=tk.DISABLED)
         self._stage_indicator.reset()
-        self._progress_bar.configure(value=0)
+        self._progress_bar.configure(mode='indeterminate')
+        self._progress_bar.start(20)  # animate while loading
         self._progress_detail.configure(text="")
-        self._status_var.set(t("status.loading"))
+        file_mb = os.path.getsize(self._input_path) / (1024 * 1024)
+        self._status_var.set(
+            t("status.loading") + f"  ({file_mb:.0f} MB)" if file_mb >= 1
+            else t("status.loading"))
 
         # ── Start the background worker thread ──
         self._worker_thread = threading.Thread(
@@ -397,6 +401,11 @@ class MainWindow(tk.Tk):
 
         Called on the main thread via _poll_progress().
         """
+        # Switch from indeterminate to determinate on first real progress
+        if self._progress_bar.cget('mode') == 'indeterminate':
+            self._progress_bar.stop()
+            self._progress_bar.configure(mode='determinate')
+
         # Stage indicator
         stage_idx = self._STAGE_MAP.get(stage, 0)
         self._stage_indicator.set_stage(stage_idx)
@@ -430,7 +439,8 @@ class MainWindow(tk.Tk):
         self._processing = False
         self._start_btn.configure(text=t("btn.start"), state=tk.NORMAL)
         self._stage_indicator.set_all_done()
-        self._progress_bar.configure(value=100)
+        self._progress_bar.stop()
+        self._progress_bar.configure(mode='determinate', value=100)
 
         summary = result["summary"]
         removed = result["removed_segments"]
@@ -471,7 +481,8 @@ class MainWindow(tk.Tk):
         self._processing = False
         self._start_btn.configure(text=t("btn.start"), state=tk.NORMAL)
         self._stage_indicator.reset()
-        self._progress_bar.configure(value=0)
+        self._progress_bar.stop()
+        self._progress_bar.configure(mode='determinate', value=0)
         self._progress_detail.configure(text="")
         self._status_var.set(t("status.ready"))
 
