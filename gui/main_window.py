@@ -137,7 +137,7 @@ class MainWindow(tk.Tk):
         """Open the About dialog."""
         dialog = tk.Toplevel(self)
         dialog.title(t("about.title"))
-        dialog.geometry("400x280")
+        dialog.geometry("480x320")
         dialog.resizable(False, False)
         dialog.transient(self)
         dialog.grab_set()
@@ -146,7 +146,8 @@ class MainWindow(tk.Tk):
         frame.pack(fill=tk.BOTH, expand=True)
 
         content = t("about.content")
-        lbl = ttk.Label(frame, text=content, justify=tk.CENTER, font=("", 10))
+        lbl = ttk.Label(frame, text=content, justify=tk.CENTER, font=("", 10),
+                        wraplength=420)
         lbl.pack(expand=True)
 
         ttk.Button(dialog, text=t("btn.close"), command=dialog.destroy).pack(pady=10)
