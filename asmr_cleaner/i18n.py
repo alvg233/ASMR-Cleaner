@@ -127,6 +127,68 @@ STRINGS = {
 
         # Clipboard
         "clipboard.copied": "已复制到剪贴板",
+
+        # ── Help ──
+        "menu.help": "帮助",
+        "menu.guide": "使用说明",
+        "menu.about": "关于",
+        "help.title": "使用说明",
+        "help.content": """【ASMR Cleaner 使用说明】
+
+━━━ 快速上手 ━━━
+1. 点「浏览」选择一段 ASMR 直播回放音频
+2. 确认文件信息（格式、时长等）无误
+3. 点「开始处理」
+4. 处理完成后点「查看日志」看切掉了哪些静音段
+
+━━━ 参数说明 ━━━
+
+静音阈值（默认 -55 dB）
+  把低于这个音量的声音视为"静音"。
+  数字越小越保守（-90 几乎不切），越大越激进（-20 把说话都切了）。
+
+  -60dB  只切绝对静音（什么都保留）
+  -55dB  切风扇/空调底噪（推荐，适合 ASMR）
+  -40dB  切轻声耳语（激进）
+  -20dB  切正常说话（极端）
+
+最小时长（默认 5 秒）
+  连续静音得超过这个时长才会被切掉。
+  设太短（0.5s）会把换气停顿都切了，设太长（30s）只切大段空白。
+
+淡入淡出（默认 30 毫秒）
+  切除后拼接处的平滑过渡。太短会有"咔嗒"声，太长会让声音重叠。
+
+输出格式（默认 FLAC）
+  FLAC = 无损压缩（推荐），体积小，音质完全不变
+  WAV  = 无压缩，体积是 FLAC 的 3~5 倍，音质一样
+
+━━━ 常见问题 ━━━
+
+Q: 点「开始处理」后卡在"正在加载"？
+A: 大文件解码需要时间。状态栏会显示文件大小，进度条动画表示正在工作中。
+
+Q: 处理完文件变大了？
+A: 把输出格式切换为 FLAC（默认）即可，无损压缩体积小。
+
+Q: 处理完发现什么都没切？
+A: 说明这段音频里没有超过「最小时长」的静音段。可以降低阈值或缩短最小时长再试。
+
+Q: 支持哪些格式？
+A: WAV / MP3 / FLAC / AAC / OGG / M4A / WMA。输出可选 FLAC 或 WAV。""",
+
+        "about.title": "关于 ASMR Cleaner",
+        "about.content": """ASMR Cleaner  v1.0
+
+专门处理 ASMR 直播回放的音频工具。
+切除长段静音死区，自动淡入淡出拼接，
+保持耳语和触发音完好无损。
+
+技术栈：Python + pydub + numpy + tkinter
+开源许可：MIT
+ffmpeg：ffmpeg-8.1.2-essentials (gyan.dev)
+
+—— 为 ASMR 听众而生 ——""",
     },
     "en": {
         "app.title": "ASMR Cleaner",
@@ -237,6 +299,68 @@ STRINGS = {
         "menu.language": "Language",
 
         "clipboard.copied": "Copied to clipboard",
+
+        # ── Help ──
+        "menu.help": "Help",
+        "menu.guide": "Usage Guide",
+        "menu.about": "About",
+        "help.title": "Usage Guide",
+        "help.content": """【ASMR Cleaner Usage Guide】
+
+━━━ Quick Start ━━━
+1. Click [Browse] and select an ASMR live recording
+2. Verify the file info (format, duration, etc.)
+3. Click [Start]
+4. When done, click [View Log] to see removed silence segments
+
+━━━ Parameters ━━━
+
+Silence Threshold (default -55 dB)
+  Audio below this volume is treated as "silence".
+  Lower = more conservative, higher = more aggressive.
+
+  -60dB  remove only absolute silence
+  -55dB  remove fan/AC hum (recommended for ASMR)
+  -40dB  remove soft whispers (aggressive)
+  -20dB  remove normal speech (extreme)
+
+Min Duration (default 5 sec)
+  Silence must last longer than this to be removed.
+  Too short (0.5s) removes breathing pauses; too long (30s) keeps long gaps.
+
+Crossfade (default 30 ms)
+  Smooth transition at splice points. Too short = audible clicks; too long = overlap.
+
+Output Format (default FLAC)
+  FLAC = lossless compressed (recommended) — small file, same quality
+  WAV  = uncompressed — 3-5x larger, same quality
+
+━━━ FAQ ━━━
+
+Q: Stuck at "Loading"?
+A: Large files take time to decode. The status shows file size; the animated bar means it's working.
+
+Q: Output file is larger than input?
+A: Switch output format to FLAC (default) for lossless compression.
+
+Q: Nothing was removed?
+A: No silence segments exceeded the minimum duration. Try lowering the threshold or shortening the duration.
+
+Q: Supported formats?
+A: WAV / MP3 / FLAC / AAC / OGG / M4A / WMA. Output: FLAC or WAV.""",
+
+        "about.title": "About ASMR Cleaner",
+        "about.content": """ASMR Cleaner  v1.0
+
+A specialized audio tool for ASMR live recordings.
+Removes long silence segments with crossfade splicing,
+preserving whispers and trigger sounds.
+
+Tech Stack: Python + pydub + numpy + tkinter
+License: MIT
+ffmpeg: ffmpeg-8.1.2-essentials (gyan.dev)
+
+—— Made for ASMR listeners ——""",
     }
 }
 

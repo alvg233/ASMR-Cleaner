@@ -103,6 +103,54 @@ class MainWindow(tk.Tk):
             command=self._on_language_selected,
         )
 
+        # ── Help menu ──
+        help_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label=t("menu.help"), menu=help_menu)
+        help_menu.add_command(label=t("menu.guide"), command=self._show_help)
+        help_menu.add_command(label=t("menu.about"), command=self._show_about)
+
+    def _show_help(self):
+        """Open the usage guide dialog."""
+        dialog = tk.Toplevel(self)
+        dialog.title(t("help.title"))
+        dialog.geometry("600x500")
+        dialog.minsize(400, 300)
+        dialog.transient(self)
+        dialog.grab_set()
+
+        frame = ttk.Frame(dialog, padding=10)
+        frame.pack(fill=tk.BOTH, expand=True)
+
+        text = tk.Text(frame, wrap=tk.WORD, font=("Microsoft YaHei", 10),
+                       padx=10, pady=10)
+        text.insert("1.0", t("help.content"))
+        text.configure(state="disabled")
+        text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=text.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        text.configure(yscrollcommand=scrollbar.set)
+
+        ttk.Button(dialog, text=t("btn.close"), command=dialog.destroy).pack(pady=10)
+
+    def _show_about(self):
+        """Open the About dialog."""
+        dialog = tk.Toplevel(self)
+        dialog.title(t("about.title"))
+        dialog.geometry("400x280")
+        dialog.resizable(False, False)
+        dialog.transient(self)
+        dialog.grab_set()
+
+        frame = ttk.Frame(dialog, padding=20)
+        frame.pack(fill=tk.BOTH, expand=True)
+
+        content = t("about.content")
+        lbl = ttk.Label(frame, text=content, justify=tk.CENTER, font=("", 10))
+        lbl.pack(expand=True)
+
+        ttk.Button(dialog, text=t("btn.close"), command=dialog.destroy).pack(pady=10)
+
     def _on_language_selected(self):
         """Handle language menu selection."""
         new_lang = self._lang_var.get()
